@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log In — Stackly</title>
+<meta name="description" content="Log in to your dashboard.">
+<link rel="icon" type="image/webp" href="assets/favicon.webp?v=2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/pages.css">
+<link rel="stylesheet" href="assets/theme.css?v=12">
+<style>body{padding-top:0}.auth-wrap{min-height:100vh}</style>
+</head>
+<body>
+<div id="preloader" aria-hidden="true">
+  <div class="pl-inner"><svg class="pl-logo" viewBox="0 0 64 64" width="66" height="66" aria-hidden="true" focusable="false"><path d="M6 16h52L38 38v14a3 3 0 0 1-1.6 2.7l-6 3A2 2 0 0 1 27.5 56V38z" fill="#0E7C6B"/><path d="M6 16h52l-5.5 6.3h-41z" fill="#5EE0C6"/><circle cx="32" cy="6.5" r="3.6" fill="#F2A93B"/></svg><div class="pl-bar"><span></span></div></div>
+</div>
+
+<div class="auth-wrap">
+  <div class="auth-side">
+    <a class="brand" href="index.html">
+      <img class="brand-logo" src="assets/logo.webp" alt="Stackly" width="145" height="42">
+    </a>
+    <div>
+      <div class="a-quote">"Twelve weeks in and our pipeline finally moves on time."</div>
+      <div class="a-who">Jordan M. — Pipeline &amp; Deal Management, Month 3</div>
+    </div>
+  </div>
+  <div class="auth-form">
+    <div class="auth-form-inner">
+      <h1>Welcome back.</h1>
+      <p class="lede">Log in to check your pipeline, log this week's activity, and message your success manager.</p>
+      <div class="f-field">
+        <label for="dashSelect">Sign in to</label>
+        <select id="dashSelect">
+          <option value="client">Client Dashboard</option>
+          <option value="manager">Account Manager Dashboard</option>
+        </select>
+      </div>
+      <form data-login-form>
+        <div class="f-field"><label>Email</label><input type="email" placeholder="you@email.com" required></div>
+        <div class="f-field"><label>Password</label><input type="password" placeholder="••••••••" required></div>
+        <div class="auth-check">
+          <label style="display:flex; align-items:center; gap:8px;"><input type="checkbox" style="width:auto;"> Remember me</label>
+          <a href="forgot-password.html" style="margin-left:auto; font-weight:800; color:var(--ember-deep);">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn btn-solid" style="width:100%;">Log In</button>
+      </form>
+      <div class="auth-foot">New to Stackly? <a href="signup.html">Create an account</a></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="assets/site.js"></script>
+<script>
+/* The "Sign in to" selection decides which dashboard the login form sends you to */
+(function(){
+  var select = document.getElementById('dashSelect');
+  var form = document.querySelector('[data-login-form]');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = form.querySelector('button[type="submit"]');
+    btn.textContent = 'Logging In…';
+    btn.disabled = true;
+    if(typeof gsap !== 'undefined'){
+      gsap.to('.auth-form-inner', {opacity:0, y:-14, duration:0.35, ease:'power2.in', onComplete:goToDashboard});
+    } else {
+      setTimeout(goToDashboard, 300);
+    }
+    function goToDashboard(){
+      try{ sessionStorage.setItem('stackly_role', select.value); sessionStorage.setItem('stackly_email', form.querySelector('input[type="email"]').value.trim()); sessionStorage.removeItem('stackly_name'); }catch(e){}
+      window.location.href = select.value === 'manager' ? 'dashboard-manager.html' : 'dashboard-client.html';
+    }
+  });
+})();
+</script>
+</body>
+</html>
